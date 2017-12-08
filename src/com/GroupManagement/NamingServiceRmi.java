@@ -1,4 +1,4 @@
-package com.GroupManagment;
+package com.GroupManagement;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -9,5 +9,6 @@ public interface NamingServiceRmi extends Remote{
     public String getLeader(String groupId) throws RemoteException;
     public void registerGroup(String groupId, String leader) throws RemoteException;
     public List<String> getGroups() throws RemoteException;
+    public void removeGroup(String groupId) throws RemoteException;
 
 }

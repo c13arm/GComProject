@@ -1,4 +1,4 @@
-package com.GroupManagment;
+package com.GroupManagement;
 
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
@@ -7,37 +7,34 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 
+/**
+ * Provide operations to create and remove groups, as well as add and remove members from groups
+ * Monitoring a group and indicates when a member of the group crashes
+ * Notify members in a group about changes in group composition
+ * When a group gets sent a message, the group name is resolved into a list of group members
+ */
 public class GroupManagement {
-    static NamingServiceRmi stub;
+    NamingServiceRmi stub;
 
     List<User> members;
     String groupName;
 
     public static void main(String args[]) {
+        new GroupManagement("localhost");
+    }
+
+    public GroupManagement(String hostName) {
         try {
             List<String> groups;
-            Registry registry = LocateRegistry.getRegistry("localhost");
+            Registry registry = LocateRegistry.getRegistry(hostName);
+            stub = (NamingServiceRmi) registry.lookup("NamingService");
 
-            NamingServiceRmi stub = (NamingServiceRmi) registry.lookup("NamingService");
             stub.registerGroup("test", "testLeader");
-            stub.registerGroup("test2", "testLeader2");
-            stub.registerGroup("test3", "testLeader4");
-            stub.registerGroup("test4", "testLeader5");
-
             System.out.println("Result: "+stub.getLeader("test"));
             groups = stub.getGroups();
             for (String g: groups) {
                 System.out.println(g);
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    static  {
-        try {
-            Registry registry = LocateRegistry.getRegistry("localhost");
-            stub = (NamingServiceRmi) registry.lookup("NamingService");
         } catch (AccessException e) {
             e.printStackTrace();
         } catch (RemoteException e) {
@@ -45,34 +42,28 @@ public class GroupManagement {
         } catch (NotBoundException e) {
             e.printStackTrace();
         }
-
     }
 
-    static List<String> getGroups() throws RemoteException {
+    List<String> getGroups() throws RemoteException {
         return stub.getGroups();
     }
 
-    static void createGroup(String groupName, User leader) throws RemoteException {
+    void createGroup(String groupName, User leader) throws RemoteException {
         stub.registerGroup(groupName, leader.getName());
     }
 
-    GroupManagement(String groupId) {
-
-        groupName = groupId;
-        //stub.getLeader()
+    /**
+     * Remove group when all group members left
+     * @param groupId Group Id
+     * @throws RemoteException
+     */
+    void removeGroup(String groupId) throws RemoteException {
+        stub.removeGroup(groupId);
     }
 
-    /*void removeGroup(String groupName) {
 
-    }*/
 
-    void addMember(User user) {
 
-    }
-
-    void removeMember(User user) {
-
-    }
 
     List<User> getMembers() {
         return null;

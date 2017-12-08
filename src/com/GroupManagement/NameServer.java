@@ -1,4 +1,4 @@
-package com.GroupManagment;
+package com.GroupManagement;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

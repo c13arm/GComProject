@@ -1,4 +1,4 @@
-package com;
+package com.MessageOrdering;
 
 public class MessageOrdering {
 }

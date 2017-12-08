@@ -1,15 +1,13 @@
-package com.GroupManagment;
+package com.GroupManagement;
 
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class NamingService extends UnicastRemoteObject implements NamingServiceRmi {
-    //group name -> leader
+    //group name, leader
     HashMap<String,String> groupMap;
 
     public NamingService() throws RemoteException {
@@ -28,8 +26,14 @@ public class NamingService extends UnicastRemoteObject implements NamingServiceR
     }
 
     @Override
+    public void removeGroup(String groupId) throws RemoteException {
+        groupMap.remove(groupId);
+    }
+
+    @Override
     public List<String> getGroups() throws RemoteException {
         return new ArrayList<>(groupMap.keySet());
     }
+
 }
 
