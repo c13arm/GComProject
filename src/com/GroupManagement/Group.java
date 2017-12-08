@@ -1,23 +1,27 @@
 package com.GroupManagement;
 
 import com.Communication.Communication;
+import com.Communication.Message;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Group extends UnicastRemoteObject implements GroupServiceRmi{
+public class Group implements Serializable {
     List<User> members;
     String id;
     User leader;
     Communication communicationModule;
 
-    Group(String id, User leader) throws RemoteException {
+    Group(String id, User leader, Communication communicationModule) throws RemoteException {
         super();
+        members = new ArrayList<>();
         addMember(leader);
         this.leader = leader;
         this.id = id;
-        setCommunicationModule(leader.getComMod());
+        this.communicationModule = communicationModule;
     }
 
     public void addMember(User user)
@@ -28,6 +32,10 @@ public class Group extends UnicastRemoteObject implements GroupServiceRmi{
     public void removeMember(User user)
     {
         members.remove(user);
+    }
+
+    public void multicast(Message message) {
+        communicationModule.multicast(members, message);
     }
 
     /**
@@ -49,18 +57,10 @@ public class Group extends UnicastRemoteObject implements GroupServiceRmi{
     /**
      * Notify group members about new leader
      */
-    void notifyNewLeader()
+    /*void notifyNewLeader()
     {
         communicationModule.multicastNotification(members);
-    }
+    }*/
 
-    void setCommunicationModule(Communication communicationModule)
-    {
-        this.communicationModule = communicationModule;
-    }
 
-    @Override
-    public List<User> getMembersRemote() throws RemoteException {
-        return null;
-    }
 }

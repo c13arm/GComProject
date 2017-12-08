@@ -3,21 +3,38 @@ package com.GroupManagement;
 import com.Communication.Communication;
 import com.Communication.Message;
 
+import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
     String name;
-    //UserServiceRmi stub;
+    String hostname;
+    UserServiceRmi stub = null;
 
+    User() {
+        name = "";
+        hostname = "";
+    }
 
-    User(String name, String hostname) throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry(hostname);
-        //stub = (UserServiceRmi) registry.lookup("UserService");
+    User(String name, String hostname, boolean remote) throws RemoteException, NotBoundException {
+        if(remote) {
+            Registry registry = LocateRegistry.getRegistry(hostname);
+            stub = (UserServiceRmi) registry.lookup("UserService" + name);
+        }
+        this.hostname = hostname;
         this.name = name;
+        //System.out.println(this.name + "  " + this.hostname);
+    }
+
+    void initStub() throws RemoteException, NotBoundException {
+        System.out.println(this.name + "  " + this.hostname);
+        Registry registry = LocateRegistry.getRegistry(hostname);
+        stub = (UserServiceRmi) registry.lookup("UserService" + name);
     }
 
     public String getName()
@@ -25,17 +42,10 @@ public class User {
         return name;
     }
 
-    public void sendMessage(Message message) {
-        //stub.sendMessage();
+    public void sendMessage(Message message) throws RemoteException {
+        if(stub != null)
+            stub.sendMessage(message);
+        else
+            System.out.println("stub is null");
     }
-
-    public List<User> getMembers() throws RemoteException {
-       // return stub.getMembers();
-        return null;
-    }
-
-    Communication getComMod() {
-        return null;
-    }
-
 }

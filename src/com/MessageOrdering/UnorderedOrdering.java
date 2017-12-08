@@ -2,14 +2,14 @@ package com.MessageOrdering;
 
 import com.Communication.Message;
 
-import java.util.Queue;
+import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class UnorderedOrdering implements MessageOrdering{
+public class UnorderedOrdering implements MessageOrdering, Serializable {
     BlockingQueue<Message> messageQueue;
 
-    UnorderedOrdering()
+    public UnorderedOrdering()
     {
         messageQueue = new LinkedBlockingQueue<>();
     }

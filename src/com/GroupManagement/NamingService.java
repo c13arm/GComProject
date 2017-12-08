@@ -8,7 +8,7 @@ import java.util.List;
 
 public class NamingService extends UnicastRemoteObject implements NamingServiceRmi {
     //group name, leader
-    HashMap<String,String> groupMap;
+    HashMap<String,User> groupMap;
 
     public NamingService() throws RemoteException {
         super();
@@ -16,12 +16,12 @@ public class NamingService extends UnicastRemoteObject implements NamingServiceR
     }
 
     @Override
-    public String getLeader(String groupId) {
+    public User getLeader(String groupId) {
         return groupMap.get(groupId);
     }
 
     @Override
-    public void registerGroup(String groupId, String leader) {
+    public void registerGroup(String groupId, User leader) {
         groupMap.put(groupId, leader);
     }
 
