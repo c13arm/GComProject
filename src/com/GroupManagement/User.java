@@ -11,16 +11,16 @@ import java.util.List;
 
 public class User {
     String name;
-    UserServiceRmi stub;
+    //UserServiceRmi stub;
 
 
     User(String name, String hostname) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(hostname);
-        stub = (UserServiceRmi) registry.lookup("UserService");
+        //stub = (UserServiceRmi) registry.lookup("UserService");
         this.name = name;
     }
 
-    String getName()
+    public String getName()
     {
         return name;
     }
@@ -30,10 +30,12 @@ public class User {
     }
 
     public List<User> getMembers() throws RemoteException {
-        return stub.getMembers();
+       // return stub.getMembers();
+        return null;
     }
 
     Communication getComMod() {
         return null;
     }
+
 }

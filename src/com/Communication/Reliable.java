@@ -9,4 +9,9 @@ public class Reliable implements Communication {
     public void multicast(List<User> members, Message mess) {
 
     }
+
+    @Override
+    public void receive(Message mess) {
+
+    }
 }
