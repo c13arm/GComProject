@@ -4,6 +4,8 @@ import com.Communication.Communication;
 import com.Communication.Message;
 
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -21,13 +23,17 @@ public class User implements Serializable {
         hostname = "";
     }
 
+    User(String name) throws UnknownHostException {
+        this.hostname = InetAddress.getLocalHost().getCanonicalHostName();
+        this.name = name;
+    }
+
     User(String name, String hostname, boolean remote) throws RemoteException, NotBoundException {
-        if(remote) {
-            Registry registry = LocateRegistry.getRegistry(hostname);
-            stub = (UserServiceRmi) registry.lookup("UserService" + name);
-        }
         this.hostname = hostname;
         this.name = name;
+        if(remote) {
+            initStub();
+        }
         //System.out.println(this.name + "  " + this.hostname);
     }
 

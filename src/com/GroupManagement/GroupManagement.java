@@ -25,10 +25,10 @@ public class GroupManagement {
     NamingServiceRmi stub;
 
     public static void main(String args[]) {
-        new GroupManagement("localhost");
+        new GroupManagement("localhost", args[0]);
     }
 
-    public GroupManagement(String hostName) {
+    public GroupManagement(String hostName, String userName) {
         try {
             List<String> groups;
             Group group;
@@ -36,17 +36,12 @@ public class GroupManagement {
             stub = (NamingServiceRmi) registry.lookup("NamingService");
 
             groups = stub.getGroups();
+            User localUser = new User(userName);
             if(!groups.contains("test")) {
-                group = createGroup("test", new User("test", InetAddress.getLocalHost().getHostName(), false), new NonReliable(new UnorderedOrdering()));
+                group = createGroup("test", localUser, new NonReliable(new UnorderedOrdering()));
             } else {
-                group = joinGroup("test", "user");
-                group.multicast(new Message(MessageType.MESS));
-            }
-
-            System.out.println("Result: "+stub.getLeader("test").hostname +"  " +stub.getLeader("test").name );
-            groups = stub.getGroups();
-            for (String g: groups) {
-                System.out.println(g);
+                group = joinGroup("test", localUser);
+                group.multicast(new Message(MessageType.MESS, localUser));
             }
         } catch (AccessException e) {
             e.printStackTrace();
@@ -77,7 +72,7 @@ public class GroupManagement {
         return group;
     }
 
-    Group joinGroup(String groupName, String userName) throws RemoteException {
+    Group joinGroup(String groupName, User localUser) throws RemoteException, UnknownHostException {
         User leader = stub.getLeader(groupName);
         try {
             leader.initStub();
@@ -94,14 +89,15 @@ public class GroupManagement {
                 e.printStackTrace();
             }
         }
+        group.addMember(localUser);
         try {
             UserServiceRmi userService = new UserService(group);
             Registry registry = LocateRegistry.getRegistry();
-
-            registry.rebind("UserService" + userName, userService);
+            registry.rebind("UserService" + localUser.getName() , userService);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        group.memberJoined(localUser);
         return group;
     }
 

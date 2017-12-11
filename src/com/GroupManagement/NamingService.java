@@ -16,12 +16,12 @@ public class NamingService extends UnicastRemoteObject implements NamingServiceR
     }
 
     @Override
-    public User getLeader(String groupId) {
+    public User getLeader(String groupId) throws RemoteException {
         return groupMap.get(groupId);
     }
 
     @Override
-    public void registerGroup(String groupId, User leader) {
+    public void registerGroup(String groupId, User leader) throws RemoteException {
         groupMap.put(groupId, leader);
     }
 

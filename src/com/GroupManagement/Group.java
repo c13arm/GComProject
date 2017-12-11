@@ -2,8 +2,10 @@ package com.GroupManagement;
 
 import com.Communication.Communication;
 import com.Communication.Message;
+import com.Communication.MessageType;
 
 import java.io.Serializable;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -15,17 +17,17 @@ public class Group implements Serializable {
     User leader;
     Communication communicationModule;
 
-    Group(String id, User leader, Communication communicationModule) throws RemoteException {
+    Group(String id, User leader, Communication communicationModule){
         super();
         members = new ArrayList<>();
-        addMember(leader);
+        members.add(leader);
         this.leader = leader;
         this.id = id;
         this.communicationModule = communicationModule;
     }
 
-    public void addMember(User user)
-    {
+    public void addMember(User user) {
+
         members.add(user);
     }
 
@@ -41,9 +43,10 @@ public class Group implements Serializable {
     /**
      * Notify group members of newly joined group member
      */
-    void memberJoined()
+    void memberJoined(User newMember)
     {
-
+        Message mess = new Message(MessageType.JOIN, newMember);
+        communicationModule.multicast(members, mess);
     }
 
     /**
@@ -54,6 +57,10 @@ public class Group implements Serializable {
 
     }
 
+    boolean isMember(User user) {
+        return members.contains(user);
+    }
+
     /**
      * Notify group members about new leader
      */
@@ -62,5 +69,10 @@ public class Group implements Serializable {
         communicationModule.multicastNotification(members);
     }*/
 
+    protected Group clone() {
+        Group ret = new Group(this.id, this.leader, this.communicationModule);
+        ret.members.addAll(this.members);
+        return ret;
+    }
 
 }
