@@ -11,8 +11,8 @@ public class TreeBased extends Communication {
     }
 
     @Override
-    public void multicast(List<User> members, Message mess) {
-
+    public List<User> multicast(List<User> members, Message mess) {
+        return null;
     }
 
     @Override

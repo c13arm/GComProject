@@ -37,7 +37,10 @@ public class Group implements Serializable {
     }
 
     public void multicast(Message message) {
-        communicationModule.multicast(members, message);
+        List<User> failed = communicationModule.multicast(members, message);
+        for (User u : failed) {
+            removeMember(u);
+        }
     }
 
     /**

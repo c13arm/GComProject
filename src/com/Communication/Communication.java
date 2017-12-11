@@ -16,7 +16,7 @@ public abstract class Communication implements Serializable{
         this.orderingModule = orderingModule;
     }
 
-    abstract public void multicast(List<User> members, Message mess);
+    abstract public List<User> multicast(List<User> members, Message mess);
     abstract public void receive(Message mess);
 
 }
