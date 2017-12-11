@@ -5,6 +5,7 @@ import com.MessageOrdering.MessageOrdering;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NonReliable extends Communication implements Serializable {
@@ -19,8 +20,9 @@ public class NonReliable extends Communication implements Serializable {
     }
 
     @Override
-    public void multicast(List<User> members, Message mess)
+    public List<User> multicast(List<User> members, Message mess)
     {
+        List<User> failed = new ArrayList<>();
         if(orderingModule == null) {
             System.out.println("orderingModule");
         }
@@ -30,9 +32,10 @@ public class NonReliable extends Communication implements Serializable {
             try {
                 member.sendMessage(newMess);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                failed.add(member);
             }
         }
+        return failed;
     }
 
     @Override
