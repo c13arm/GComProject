@@ -24,32 +24,17 @@ import java.util.List;
 public class GroupManagement {
     NamingServiceRmi stub;
 
-    public static void main(String args[]) {
+   /* public static void main(String args[]) {
         new GroupManagement("localhost", args[0]);
-    }
+    }*/
 
-    public GroupManagement(String hostName, String userName) {
+    public GroupManagement(String hostName) {
         try {
-            List<String> groups;
-            Group group;
             Registry registry = LocateRegistry.getRegistry(hostName);
             stub = (NamingServiceRmi) registry.lookup("NamingService");
-
-            groups = stub.getGroups();
-            User localUser = new User(userName);
-            if(!groups.contains("test")) {
-                group = createGroup("test", localUser, new NonReliable(new UnorderedOrdering()));
-            } else {
-                group = joinGroup("test", localUser);
-                group.multicast(new Message(MessageType.MESS, localUser));
-            }
-        } catch (AccessException e) {
+        } catch (AccessException | NotBoundException e) {
             e.printStackTrace();
         } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
@@ -58,7 +43,7 @@ public class GroupManagement {
         return stub.getGroups();
     }
 
-    Group createGroup(String groupName, User leader, Communication communicationModule) throws RemoteException {
+    public Group createGroup(String groupName, User leader, Communication communicationModule) throws RemoteException {
         Group group = new Group(groupName, leader, communicationModule);
         try {
             UserServiceRmi userService = new UserService(group);
@@ -72,7 +57,7 @@ public class GroupManagement {
         return group;
     }
 
-    Group joinGroup(String groupName, User localUser) throws RemoteException, UnknownHostException {
+    public Group joinGroup(String groupName, User localUser) throws RemoteException, UnknownHostException {
         User leader = stub.getLeader(groupName);
         try {
             leader.initStub();

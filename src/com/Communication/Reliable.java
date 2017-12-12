@@ -6,7 +6,7 @@ import com.MessageOrdering.MessageOrdering;
 import java.util.List;
 
 public class Reliable extends Communication {
-    Reliable(MessageOrdering orderingModule) {
+    public Reliable(MessageOrdering orderingModule) {
         super(orderingModule);
     }
 

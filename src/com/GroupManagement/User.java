@@ -23,7 +23,7 @@ public class User implements Serializable {
         hostname = "";
     }
 
-    User(String name) throws UnknownHostException {
+    public User(String name) throws UnknownHostException {
         this.hostname = InetAddress.getLocalHost().getCanonicalHostName();
         this.name = name;
     }

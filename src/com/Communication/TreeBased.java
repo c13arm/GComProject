@@ -6,7 +6,7 @@ import com.MessageOrdering.MessageOrdering;
 import java.util.List;
 
 public class TreeBased extends Communication {
-    TreeBased(MessageOrdering orderingModule) {
+    public TreeBased(MessageOrdering orderingModule) {
         super(orderingModule);
     }
 

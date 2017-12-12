@@ -1,5 +1,12 @@
 package com;
 
+import com.Communication.*;
+import com.GroupManagement.Group;
+import com.GroupManagement.GroupManagement;
+import com.GroupManagement.User;
+import com.MessageOrdering.CausalOrdering;
+import com.MessageOrdering.MessageOrdering;
+import com.MessageOrdering.UnorderedOrdering;
 import com.sun.imageio.plugins.jpeg.JPEGImageMetadataFormatResources;
 
 import javax.swing.*;
@@ -7,6 +14,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 
 public class GUI extends JFrame {
     private JPanel mainPanel;
@@ -32,6 +41,9 @@ public class GUI extends JFrame {
     private JList userList;
     private JList messagesListChat;
     private JList availableGroupsList;
+    private JRadioButton orderedRadioButton;
+    private JComboBox communicationTypeBox;
+    private JComboBox messageOrderingBox;
 
     private CardLayout c1 = (CardLayout)cardPanel.getLayout();
 
@@ -42,7 +54,9 @@ public class GUI extends JFrame {
     DebugWindow frameDebug;
     DefaultListModel listModelMessages, listModelHeldMessages, listModelSentMessages, listModelMessagesChat, listModelUser, listModelAvailableGroups;
 
-
+    //ÄNDRA
+    User user;
+    Group group;
 
     public GUI() {
         frame = this;
@@ -67,6 +81,19 @@ public class GUI extends JFrame {
                 c1.show(cardPanel, "Card2");
                 frame.setTitle("GCom - " + username);
                 frameDebug = new DebugWindow();
+
+                communicationTypeBox.addItem("Non reliable");
+                communicationTypeBox.addItem("Basic reliable");
+                communicationTypeBox.addItem("Three based reliable");
+                messageOrderingBox.addItem("Unordered");
+                messageOrderingBox.addItem("Causal ordering");
+
+                try {
+                    user = new User(username);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
 
         });
@@ -76,6 +103,15 @@ public class GUI extends JFrame {
                 c1.show(cardPanel, "Card3");
                 frame.setTitle("GCom - " + username);
                 messagesListChat.setModel(listModelMessagesChat);
+
+
+                GroupManagement gm = new GroupManagement("localhost");
+                try {
+                    group = gm.joinGroup(joinGroupLabel.getText(), user);
+                } catch (RemoteException | UnknownHostException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
         });
         createGroupButton.addActionListener(new ActionListener() {
@@ -84,6 +120,29 @@ public class GUI extends JFrame {
                 c1.show(cardPanel, "Card3");
                 frame.setTitle("GCom - " + username);
                 messagesListChat.setModel(listModelMessagesChat);
+
+                MessageOrdering order = null;
+                if(messageOrderingBox.getSelectedItem().equals("Unordered")) {
+                    order = new UnorderedOrdering();
+                } else if (messageOrderingBox.getSelectedItem().equals("Causal ordering")) {
+                    order = new CausalOrdering();
+                }
+
+                GroupManagement gm = new GroupManagement("localhost");
+                Communication communicationModule = null;
+                if(communicationTypeBox.getSelectedItem().equals("Non reliable")) {
+                    communicationModule = new NonReliable(order);
+                } else if(communicationTypeBox.getSelectedItem().equals("Basic reliable")) {
+                    communicationModule = new Reliable(order);
+                } else if(communicationTypeBox.getSelectedItem().equals("Three based reliable")){
+                    communicationModule = new TreeBased(order);
+                }
+                try {
+                    group = gm.createGroup(createGroupField.getText(), user, communicationModule);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
         });
         leaveChatButton.addActionListener(new ActionListener() {
@@ -135,6 +194,8 @@ public class GUI extends JFrame {
         chatButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                //FIXA TRÅDNING
+
                 if(frameDebug.isVisible())
                 {
                     frameDebug.messagesList.setModel(listModelMessages);
@@ -146,10 +207,14 @@ public class GUI extends JFrame {
                 {
                     listModelMessagesChat.addElement(chatField.getText());
                 }
+
+                Message mess = new Message(MessageType.MESS, user, chatField.getText());
+                group.multicast(mess);
             }
         });
 
         add(mainPanel);
+
     }
 
     public static void main(String[] args) {
