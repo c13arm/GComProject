@@ -6,7 +6,8 @@ import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class UnorderedOrdering implements MessageOrdering, Serializable {
+public class UnorderedOrdering implements MessageOrdering, Serializable
+{
     BlockingQueue<Message> messageQueue;
 
     public UnorderedOrdering()
@@ -15,22 +16,27 @@ public class UnorderedOrdering implements MessageOrdering, Serializable {
     }
 
     @Override
-    public Message prepareMessage(Message message) {
+    public Message prepareMessage(Message message)
+    {
         return message;
     }
 
     @Override
-    public void receive(Message message) {
-        try {
+    public void receive(Message message)
+    {
+        try
+        {
             messageQueue.put(message);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException e)
+        {
             e.printStackTrace();
         }
 
     }
 
     @Override
-    public Message deliver() throws InterruptedException {
+    public Message deliver() throws InterruptedException
+    {
         return messageQueue.take();
     }
 }

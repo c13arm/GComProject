@@ -1,4 +1,4 @@
-package com;
+package com.ChattClient;
 
 import com.Communication.*;
 import com.GroupManagement.Group;
@@ -7,10 +7,9 @@ import com.GroupManagement.User;
 import com.MessageOrdering.CausalOrdering;
 import com.MessageOrdering.MessageOrdering;
 import com.MessageOrdering.UnorderedOrdering;
-import com.sun.imageio.plugins.jpeg.JPEGImageMetadataFormatResources;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,14 +56,16 @@ public class GUI extends JFrame {
     //ÄNDRA
     User user;
     Group group;
+    ReceiveWorker worker;
+    GroupManagement gm;
 
     public GUI() {
         frame = this;
         setTitle("GCom");
         setSize(700, 600);
-        listModelMessages = new DefaultListModel();
-        listModelHeldMessages = new DefaultListModel();
-        listModelSentMessages = new DefaultListModel();
+        listModelMessages = new DefaultListModel<Message>();
+        listModelHeldMessages = new DefaultListModel<Message>();
+        listModelSentMessages = new DefaultListModel<Message>();
         listModelMessagesChat = new DefaultListModel();
         listModelUser = new DefaultListModel();
         listModelAvailableGroups = new DefaultListModel();
@@ -72,12 +73,15 @@ public class GUI extends JFrame {
         messagesListChat.setBorder(BorderFactory.createTitledBorder("Chat"));
         availableGroupsList.setBorder(BorderFactory.createTitledBorder("Available groups"));
 
+        gm = new GroupManagement("localhost");
+
         createUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 username = usernameField.getText();
                 userList.setModel(listModelUser);
-                listModelUser.addElement(username);
+                availableGroupsList.setModel(listModelAvailableGroups);
+                //listModelUser.addElement(username);
                 c1.show(cardPanel, "Card2");
                 frame.setTitle("GCom - " + username);
                 frameDebug = new DebugWindow();
@@ -94,6 +98,17 @@ public class GUI extends JFrame {
                     e.printStackTrace();
                     System.exit(1);
                 }
+                try
+                {
+                    List<String> groups = gm.getGroups();
+                    for(String g : groups) {
+                        listModelAvailableGroups.addElement(g);
+                    }
+                } catch (RemoteException e)
+                {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
 
         });
@@ -105,14 +120,20 @@ public class GUI extends JFrame {
                 messagesListChat.setModel(listModelMessagesChat);
 
 
-                GroupManagement gm = new GroupManagement("localhost");
+
                 try {
-                    group = gm.joinGroup(joinGroupLabel.getText(), user);
+                    group = gm.joinGroup(joinGroupField.getText(), user);
                 } catch (RemoteException | UnknownHostException e) {
                     e.printStackTrace();
                     System.exit(1);
                 }
-            }
+                for (User u : group.getMembers())
+                {
+                    System.out.println(u.getName());
+                    listModelUser.addElement(u.getName());
+                }
+                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser);
+                worker.execute();            }
         });
         createGroupButton.addActionListener(new ActionListener() {
             @Override
@@ -128,7 +149,6 @@ public class GUI extends JFrame {
                     order = new CausalOrdering();
                 }
 
-                GroupManagement gm = new GroupManagement("localhost");
                 Communication communicationModule = null;
                 if(communicationTypeBox.getSelectedItem().equals("Non reliable")) {
                     communicationModule = new NonReliable(order);
@@ -138,16 +158,30 @@ public class GUI extends JFrame {
                     communicationModule = new TreeBased(order);
                 }
                 try {
+                    System.out.println(createGroupField.getText());
                     group = gm.createGroup(createGroupField.getText(), user, communicationModule);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                     System.exit(1);
                 }
+                for (User u : group.getMembers())
+                {
+                    listModelUser.addElement(u.getName());
+                }
+                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser);
+                worker.execute();
             }
         });
         leaveChatButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                worker.cancel(true);
+                group.memberLeft(user);
+                listModelUser.clear();
+                listModelMessagesChat.clear();
+                listModelMessages.clear();
+                listModelHeldMessages.clear();
+                listModelSentMessages.clear();
                 c1.show(cardPanel, "Card2");
                 frame.setTitle("GCom - " + username);
             }
@@ -195,21 +229,20 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 //FIXA TRÅDNING
-
+                Message mess = group.createMessage(chatField.getText(), user);
                 if(frameDebug.isVisible())
                 {
+
                     frameDebug.messagesList.setModel(listModelMessages);
                     frameDebug.holdMessageList.setModel(listModelHeldMessages);
                     frameDebug.sentMessageList.setModel(listModelSentMessages);
-                    listModelMessages.addElement(chatField.getText());
+                    listModelMessages.addElement(mess);
                 }
                 else
                 {
-                    listModelMessagesChat.addElement(chatField.getText());
+                    listModelMessagesChat.addElement("("+username+"): " + chatField.getText());
+                    group.multicast(mess);
                 }
-
-                Message mess = new Message(MessageType.MESS, user, chatField.getText());
-                group.multicast(mess);
             }
         });
 

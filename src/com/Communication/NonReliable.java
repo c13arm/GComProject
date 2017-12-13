@@ -26,11 +26,10 @@ public class NonReliable extends Communication implements Serializable {
         if(orderingModule == null) {
             System.out.println("orderingModule");
         }
-        Message newMess = super.orderingModule.prepareMessage(mess);
         for (User member: members)
         {
             try {
-                member.sendMessage(newMess);
+                member.sendMessage(mess);
             } catch (RemoteException e) {
                 failed.add(member);
             }

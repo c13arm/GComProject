@@ -39,7 +39,7 @@ public class GroupManagement {
         }
     }
 
-    List<String> getGroups() throws RemoteException {
+    public List<String> getGroups() throws RemoteException {
         return stub.getGroups();
     }
 

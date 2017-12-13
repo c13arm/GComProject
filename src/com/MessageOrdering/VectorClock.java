@@ -2,17 +2,22 @@ package com.MessageOrdering;
 
 import com.GroupManagement.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class VectorClock{
+public class VectorClock implements Serializable{
     //List<Integer> clock;
     HashMap<String, Integer> clock;
-    public VectorClock(List<User> users)
+    public VectorClock(int initalSize)
     {
-        clock = new HashMap<>(users.size());
+        clock = new HashMap<>(initalSize);
+    }
+
+    public VectorClock(HashMap<String, Integer> clock) {
+        this.clock = clock;
     }
 
     public void increaseClock(User user)
@@ -25,7 +30,7 @@ public class VectorClock{
 
     public void update(VectorClock otherClock)
     {
-        Set<String> keys = clock.keySet();
+        ArrayList<String> keys = new ArrayList<>(clock.keySet());
         keys.addAll(otherClock.clock.keySet());
         for (String key: keys)
         {
@@ -45,7 +50,7 @@ public class VectorClock{
     {
         int lessThan = 0;
         int greaterThan = 0;
-        Set<String> keys = clock.keySet();
+        ArrayList<String> keys = new ArrayList<>(clock.keySet());
         keys.addAll(otherClock.clock.keySet());
         for (String key: keys)
         {
@@ -69,5 +74,39 @@ public class VectorClock{
         return greaterThan - lessThan;
     }
 
+    protected boolean isNext(VectorClock otherClock, User user) {
+        ArrayList<String> keys = new ArrayList<>(clock.keySet());
+        keys.addAll(otherClock.clock.keySet());
+        for (String key: keys)
+        {
+            Integer otherValue = otherClock.clock.get(key);
+            if(otherValue == null) {
+                otherValue = 0;
+            }
+            Integer ourValue = clock.get(key);
+            if(ourValue == null) {
+                ourValue = 0;
+            }
+            if(key.equals(user.getName())) {
+                if(otherValue != (ourValue + 1)) {
+                    return false;
+                }
+            } else if(otherValue > ourValue) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    @Override
+    public String toString()
+    {
+        return clock.toString();
+    }
+
+    @Override
+    protected VectorClock clone() throws CloneNotSupportedException
+    {
+        return new VectorClock((HashMap<String, Integer>)this.clock.clone());
+    }
 }

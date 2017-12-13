@@ -1,6 +1,7 @@
 package com.Communication;
 
 import com.GroupManagement.User;
+import com.MessageOrdering.VectorClock;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ public class Message implements Serializable
     private MessageType messageType;
     private User sender;
     private String mess;
+    private VectorClock clock;
 
     public Message(MessageType messageType, User sender)
     {
@@ -16,6 +18,16 @@ public class Message implements Serializable
         this.sender = sender;
     }
 
+    // Causal
+    public Message(MessageType messageType, User sender, String mess, VectorClock clock)
+    {
+        this.messageType = messageType;
+        this.sender = sender;
+        this.mess = mess;
+        this.clock = clock;
+    }
+
+    // Unordered
     public Message(MessageType messageType, User sender, String mess)
     {
         this.messageType = messageType;
@@ -29,5 +41,30 @@ public class Message implements Serializable
 
     public User getSender() {
         return sender;
+    }
+
+    public String getMess()
+    {
+        return mess;
+    }
+
+    public VectorClock getClock()
+    {
+        return clock;
+    }
+
+    public void setClock(VectorClock clock)
+    {
+        this.clock = clock;
+    }
+
+    @Override
+    public String toString()
+    {
+        String ret = sender.getName();
+        if(clock != null)
+            ret += ":" + clock.toString();
+        ret += ":"+ mess;
+        return ret;
     }
 }

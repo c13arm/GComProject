@@ -43,27 +43,39 @@ public class Group implements Serializable {
         }
     }
 
+    public List<User> getMembers() {
+        return members;
+    }
+
     /**
      * Notify group members of newly joined group member
      */
     void memberJoined(User newMember)
     {
         Message mess = new Message(MessageType.JOIN, newMember);
+        communicationModule.prepareMessage(mess);
         communicationModule.multicast(members, mess);
     }
 
     /**
      * Notify group members a group member that left
      */
-    void memberLeft()
+    public void memberLeft(User oldMember)
     {
-
+        Message mess = new Message(MessageType.LEAVE, oldMember);
+        communicationModule.prepareMessage(mess);
+        communicationModule.multicast(members, mess);
     }
 
     boolean isMember(User user) {
         return members.contains(user);
     }
 
+    public Message createMessage(String mess, User user)
+    {
+        Message message = new Message(MessageType.MESS, user, mess);
+        return communicationModule.prepareMessage(message);
+    }
     /**
      * Notify group members about new leader
      */
@@ -76,6 +88,11 @@ public class Group implements Serializable {
         Group ret = new Group(this.id, this.leader, this.communicationModule);
         ret.members.addAll(this.members);
         return ret;
+    }
+
+    public Message deliver() throws InterruptedException
+    {
+        return communicationModule.deliver();
     }
 
 }

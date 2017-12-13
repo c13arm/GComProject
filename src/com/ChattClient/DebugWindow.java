@@ -1,4 +1,4 @@
-package com;
+package com.ChattClient;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
