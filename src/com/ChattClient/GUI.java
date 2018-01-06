@@ -243,6 +243,7 @@ public class GUI extends JFrame {
                 else
                 {
                     listModelMessagesChat.addElement("("+username+"): " + chatField.getText());
+                    chatField.setText("");
                     group.multicast(mess);
                 }
             }
