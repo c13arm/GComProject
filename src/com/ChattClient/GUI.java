@@ -132,7 +132,7 @@ public class GUI extends JFrame {
                     System.out.println(u.getName());
                     listModelUser.addElement(u.getName());
                 }
-                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser);
+                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser, frameDebug, listModelHeldMessages);
                 worker.execute();            }
         });
         createGroupButton.addActionListener(new ActionListener() {
@@ -168,7 +168,7 @@ public class GUI extends JFrame {
                 {
                     listModelUser.addElement(u.getName());
                 }
-                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser);
+                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser, frameDebug, listModelHeldMessages);
                 worker.execute();
             }
         });

@@ -12,12 +12,16 @@ public class ReceiveWorker extends SwingWorker<Void, Message>
     private Group group;
     private DefaultListModel listModelMessagesChat;
     private DefaultListModel userModel;
+    private DebugWindow frameDebug;
+    private DefaultListModel holdMessages;
 
-    ReceiveWorker(Group group, DefaultListModel listModelMessagesChat, DefaultListModel userModel)
+    ReceiveWorker(Group group, DefaultListModel listModelMessagesChat, DefaultListModel userModel, DebugWindow frameDebug, DefaultListModel holdMessages)
     {
         this.group = group;
         this.listModelMessagesChat = listModelMessagesChat;
         this.userModel = userModel;
+        this.frameDebug = frameDebug;
+        this.holdMessages = holdMessages;
     }
 
     @Override
@@ -38,7 +42,14 @@ public class ReceiveWorker extends SwingWorker<Void, Message>
         {
             if (m.getMessageType() == MessageType.MESS)
             {
-                listModelMessagesChat.addElement("(" + m.getSender().getName() + "): " + m.getMess());
+                if(frameDebug.isVisible())
+                {
+                    holdMessages.addElement("(" + m.getSender().getName() + "): " + m.getMess());
+                }
+                else
+                {
+                    listModelMessagesChat.addElement("(" + m.getSender().getName() + "): " + m.getMess());
+                }
             }
             else if (m.getMessageType() == MessageType.JOIN)
             {
