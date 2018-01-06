@@ -34,8 +34,9 @@ public class Group implements Serializable {
 
     public void removeMember(User user)
     {
-        members.remove(user);
-        memberLeft(user);
+        if(members.remove(user)) {
+            memberLeft(user);
+        }
     }
 
     public void multicast(Message message) {
