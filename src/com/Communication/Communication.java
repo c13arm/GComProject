@@ -3,6 +3,7 @@ package com.Communication;
 import com.GroupManagement.User;
 import com.MessageOrdering.MessageOrdering;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,6 +25,10 @@ public abstract class Communication implements Serializable{
     }
     public Message prepareMessage(Message message) {
         return orderingModule.prepareMessage(message);
+    }
+
+    public ListModel<Message> getHoldBackListModel() {
+        return orderingModule.getHoldBackListModel();
     }
 
 }

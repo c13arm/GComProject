@@ -4,6 +4,7 @@ import com.Communication.Communication;
 import com.Communication.Message;
 import com.Communication.MessageType;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -93,6 +94,10 @@ public class Group implements Serializable {
     public Message deliver() throws InterruptedException
     {
         return communicationModule.deliver();
+    }
+
+    public ListModel<Message> getHoldBackListModel() {
+        return communicationModule.getHoldBackListModel();
     }
 
 }

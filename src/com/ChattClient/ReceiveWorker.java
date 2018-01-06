@@ -44,12 +44,8 @@ public class ReceiveWorker extends SwingWorker<Void, Message>
             {
                 if(frameDebug.isVisible())
                 {
-                    holdMessages.addElement("(" + m.getSender().getName() + "): " + m.getMess());
                 }
-                else
-                {
-                    listModelMessagesChat.addElement("(" + m.getSender().getName() + "): " + m.getMess());
-                }
+                listModelMessagesChat.addElement("(" + m.getSender().getName() + "): " + m.getMess());
             }
             else if (m.getMessageType() == MessageType.JOIN)
             {

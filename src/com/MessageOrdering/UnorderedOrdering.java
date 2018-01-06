@@ -2,6 +2,7 @@ package com.MessageOrdering;
 
 import com.Communication.Message;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -38,5 +39,11 @@ public class UnorderedOrdering implements MessageOrdering, Serializable
     public Message deliver() throws InterruptedException
     {
         return messageQueue.take();
+    }
+
+    @Override
+    public ListModel<Message> getHoldBackListModel()
+    {
+        return new DefaultListModel<>();
     }
 }

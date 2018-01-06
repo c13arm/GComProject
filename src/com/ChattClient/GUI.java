@@ -237,7 +237,7 @@ public class GUI extends JFrame {
                 {
 
                     frameDebug.messagesList.setModel(listModelMessages);
-                    frameDebug.holdMessageList.setModel(listModelHeldMessages);
+                    frameDebug.holdMessageList.setModel(group.getHoldBackListModel());
                     frameDebug.sentMessageList.setModel(listModelSentMessages);
                     listModelMessages.addElement(mess);
                 }
