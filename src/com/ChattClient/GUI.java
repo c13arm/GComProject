@@ -193,6 +193,9 @@ public class GUI extends JFrame {
                 frameDebug.setSize(700, 600);
                 frameDebug.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frameDebug.setVisible(true);
+                frameDebug.holdMessageList.setModel(group.getHoldBackListModel());
+                frameDebug.messagesList.setModel(listModelMessages);
+                frameDebug.sentMessageList.setModel(listModelSentMessages);
                 messagesListChat.setModel(listModelMessagesChat);
 
                 frameDebug.sendButton.addActionListener(new ActionListener() {
@@ -235,10 +238,6 @@ public class GUI extends JFrame {
                 Message mess = group.createMessage(chatField.getText(), user);
                 if(frameDebug.isVisible())
                 {
-
-                    frameDebug.messagesList.setModel(listModelMessages);
-                    frameDebug.holdMessageList.setModel(group.getHoldBackListModel());
-                    frameDebug.sentMessageList.setModel(listModelSentMessages);
                     listModelMessages.addElement(mess);
                 }
                 else

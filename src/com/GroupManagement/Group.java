@@ -35,11 +35,13 @@ public class Group implements Serializable {
     public void removeMember(User user)
     {
         members.remove(user);
+        memberLeft(user);
     }
 
     public void multicast(Message message) {
         List<User> failed = communicationModule.multicast(members, message);
         for (User u : failed) {
+            System.out.println(u.name);
             removeMember(u);
         }
     }

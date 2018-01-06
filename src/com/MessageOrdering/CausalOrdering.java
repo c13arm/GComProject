@@ -101,10 +101,11 @@ public class CausalOrdering implements MessageOrdering, Serializable
             System.out.println("In update");
             Message[] oldMessages = messages;
             messages = holdBackQueue.toArray(new Message[0]);
+            System.out.println(messages.length + " " + oldMessages.length);
             if(oldMessages.length > messages.length) {
                 fireIntervalRemoved(this, messages.length, oldMessages.length - 1);
             } else if (messages.length > oldMessages.length) {
-                fireIntervalAdded(this, oldMessages.length - 1 , messages.length - 1);
+                fireIntervalAdded(this, oldMessages.length , messages.length - 1);
             }
             fireContentsChanged(this, 0, messages.length - 1);
             System.out.println(messages.length);

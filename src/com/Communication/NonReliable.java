@@ -26,6 +26,7 @@ public class NonReliable extends Communication implements Serializable {
         if(orderingModule == null) {
             System.out.println("orderingModule");
         }
+        System.out.println("In multicast " + members.size());
         for (User member: members)
         {
             try {
