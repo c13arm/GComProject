@@ -200,21 +200,24 @@ public class GUI extends JFrame {
                     public void actionPerformed(ActionEvent actionEvent) {
                         if(!listModelMessages.isEmpty())
                         {
-                            String selected = frameDebug.messagesList.getSelectedValue().toString();
+                            //String selected = frameDebug.messagesList.getSelectedValue().toString();
                             int index = frameDebug.messagesList.getSelectedIndex();
                             if(index >= 0)
                             {
+                                Message mess = (Message) frameDebug.messagesList.getSelectedValue();
+                                group.multicast(mess);
+                                listModelMessages.removeElementAt(index);
                                 if(frameDebug.delayCheckBox.isSelected())
                                 {
-                                    listModelHeldMessages.addElement(selected);
-                                    listModelMessages.removeElementAt(index);
+                                    //listModelHeldMessages.addElement(selected);
+                                    //listModelMessages.removeElementAt(index);
 
                                     // Unordered/Causal
                                 }
                                 else
                                 {
-                                    listModelHeldMessages.addElement(selected);
-                                    listModelMessages.removeElementAt(index);
+                                    //listModelHeldMessages.addElement(selected);
+                                    //listModelMessages.removeElementAt(index);
 
                                     // Unordered/Causal
                                 }
