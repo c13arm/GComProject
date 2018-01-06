@@ -44,9 +44,9 @@ public class GroupManagement {
     }
 
     public Group createGroup(String groupName, User leader, Communication communicationModule) throws RemoteException {
-        Group group = new Group(groupName, leader, communicationModule);
+        Group group = new Group(groupName, leader, communicationModule, stub);
         try {
-            UserServiceRmi userService = new UserService(group);
+            UserServiceRmi userService = new UserService(group, leader);
             Registry registry = LocateRegistry.getRegistry();
 
             registry.rebind("UserService" + leader.getName() , userService);
@@ -56,6 +56,8 @@ public class GroupManagement {
         stub.registerGroup(groupName, leader);
         return group;
     }
+
+
 
     public Group joinGroup(String groupName, User localUser) throws RemoteException, UnknownHostException {
         User leader = stub.getLeader(groupName);
@@ -76,7 +78,7 @@ public class GroupManagement {
         }
         group.addMember(localUser);
         try {
-            UserServiceRmi userService = new UserService(group);
+            UserServiceRmi userService = new UserService(group, localUser);
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind("UserService" + localUser.getName() , userService);
         } catch (Exception e) {

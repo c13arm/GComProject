@@ -17,14 +17,16 @@ public class Group implements Serializable {
     String id;
     User leader;
     Communication communicationModule;
+    NamingServiceRmi stub;
 
-    Group(String id, User leader, Communication communicationModule){
+    Group(String id, User leader, Communication communicationModule, NamingServiceRmi stub){
         super();
         members = new ArrayList<>();
         members.add(leader);
         this.leader = leader;
         this.id = id;
         this.communicationModule = communicationModule;
+        this.stub = stub;
     }
 
     public void addMember(User user) {
@@ -83,13 +85,53 @@ public class Group implements Serializable {
     /**
      * Notify group members about new leader
      */
-    /*void notifyNewLeader()
+    void notifyNewLeader(User sender) throws RemoteException
     {
-        communicationModule.multicastNotification(members);
-    }*/
+        Message message = new Message(MessageType.ELECTION_DONE, leader);
+        int index = members.indexOf(sender);
+        if(index == members.size() - 1) {
+            index = 0;
+        } else {
+            index++;
+        }
+        members.get(index).sendMessage(message);
+        System.out.println("In notyfyLeader" + id + "   " + leader.name);
+    }
+
+    void election(User user, User sender)
+    {
+        if(members.size() < 2) {
+            leader = sender;
+            return;
+        }
+        int index = members.indexOf(sender);
+        System.out.println("index;" + index );
+        if(index == members.size() - 1) {
+            index = 0;
+        } else {
+            index++;
+        }
+        System.out.println("index;" + index );
+        User next = members.get(index);
+        User toSend;
+        if(user.name.compareTo(sender.getName()) < 0) {
+            toSend = sender;
+        } else {
+            toSend = user;
+        }
+        System.out.println("Electoin " + next.name + ":" + user.name + ":" + sender.name);
+        Message message = new Message(MessageType.ELECTION, toSend);
+        try
+        {
+            next.sendMessage(message);
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     protected Group clone() {
-        Group ret = new Group(this.id, this.leader, this.communicationModule);
+        Group ret = new Group(this.id, this.leader, this.communicationModule, this.stub);
         ret.members.addAll(this.members);
         return ret;
     }
