@@ -9,8 +9,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class UserService extends UnicastRemoteObject implements UserServiceRmi {
-    Group group;
-    User user;
+    private Group group;
+    private User user;
 
     UserService(Group group, User uid) throws RemoteException {
         super();
@@ -51,7 +51,10 @@ public class UserService extends UnicastRemoteObject implements UserServiceRmi {
                 group.notifyNewLeader(user);
             }
         }
-        group.communicationModule.receive(message);
+        if(message.getMessageType() != MessageType.ELECTION &&
+                message.getMessageType() != MessageType.ELECTION_DONE) {
+            group.communicationModule.receive(message);
+        }
     }
 
     @Override
