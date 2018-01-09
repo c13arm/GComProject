@@ -55,7 +55,7 @@ public class ReceiveWorker extends SwingWorker<Void, Message>
             else if (m.getMessageType() == MessageType.LEAVE)
             {
                 userModel.removeElement(m.getSender().getName());
-                listModelMessagesChat.addElement(m.getSender().getName() + " has leaved the group.");
+                listModelMessagesChat.addElement(m.getSender().getName() + " has left the group.");
             }
 
         }
