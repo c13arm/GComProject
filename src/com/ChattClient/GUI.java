@@ -51,7 +51,7 @@ public class GUI extends JFrame {
     JFrame frame;
 
     DebugWindow frameDebug;
-    DefaultListModel listModelMessages, listModelHeldMessages, listModelSentMessages, listModelMessagesChat, listModelUser, listModelAvailableGroups;
+    DefaultListModel listModelMessages, listModelHeldMessages, listModelMessagesChat, listModelUser, listModelAvailableGroups;
 
     //ÄNDRA
     User user;
@@ -65,7 +65,6 @@ public class GUI extends JFrame {
         setSize(700, 600);
         listModelMessages = new DefaultListModel<Message>();
         listModelHeldMessages = new DefaultListModel<Message>();
-        listModelSentMessages = new DefaultListModel<Message>();
         listModelMessagesChat = new DefaultListModel();
         listModelUser = new DefaultListModel();
         listModelAvailableGroups = new DefaultListModel();
@@ -181,7 +180,6 @@ public class GUI extends JFrame {
                 listModelMessagesChat.clear();
                 listModelMessages.clear();
                 listModelHeldMessages.clear();
-                listModelSentMessages.clear();
                 c1.show(cardPanel, "Card2");
                 frame.setTitle("GCom - " + username);
             }
@@ -195,7 +193,6 @@ public class GUI extends JFrame {
                 frameDebug.setVisible(true);
                 frameDebug.holdMessageList.setModel(group.getHoldBackListModel());
                 frameDebug.messagesList.setModel(listModelMessages);
-                frameDebug.sentMessageList.setModel(listModelSentMessages);
                 messagesListChat.setModel(listModelMessagesChat);
 
                 frameDebug.sendButton.addActionListener(new ActionListener() {
@@ -210,21 +207,6 @@ public class GUI extends JFrame {
                                 Message mess = (Message) frameDebug.messagesList.getSelectedValue();
                                 group.multicast(mess);
                                 listModelMessages.removeElementAt(index);
-                                if(frameDebug.delayCheckBox.isSelected())
-                                {
-                                    //listModelHeldMessages.addElement(selected);
-                                    //listModelMessages.removeElementAt(index);
-
-                                    // Unordered/Causal
-                                }
-                                else
-                                {
-                                    //listModelHeldMessages.addElement(selected);
-                                    //listModelMessages.removeElementAt(index);
-
-                                    // Unordered/Causal
-                                }
-
                             }
                         }
                     }
