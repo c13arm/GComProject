@@ -13,15 +13,13 @@ public class ReceiveWorker extends SwingWorker<Void, Message>
     private DefaultListModel listModelMessagesChat;
     private DefaultListModel userModel;
     private DebugWindow frameDebug;
-    private DefaultListModel holdMessages;
 
-    ReceiveWorker(Group group, DefaultListModel listModelMessagesChat, DefaultListModel userModel, DebugWindow frameDebug, DefaultListModel holdMessages)
+    ReceiveWorker(Group group, DefaultListModel listModelMessagesChat, DefaultListModel userModel, DebugWindow frameDebug)
     {
         this.group = group;
         this.listModelMessagesChat = listModelMessagesChat;
         this.userModel = userModel;
         this.frameDebug = frameDebug;
-        this.holdMessages = holdMessages;
     }
 
     @Override

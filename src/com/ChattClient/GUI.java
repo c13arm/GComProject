@@ -20,54 +20,49 @@ public class GUI extends JFrame {
     private JPanel mainPanel;
     private JTextField usernameField;
     private JButton createUserButton;
-    private JLabel usernameLabel;
     private JTextField joinGroupField;
     private JButton joinGroupButton;
-    private JLabel joinGroupLabel;
     private JTextField createGroupField;
     private JButton createGroupButton;
-    private JLabel createGroupLabel;
-    private JTextArea availableGroupsArea;
-    private JPanel usernamePanel;
-    private JPanel joinCreatePanel;
-    private JPanel chatPanel;
     private JTextField chatField;
     private JButton chatButton;
     private JButton leaveChatButton;
     private JButton debugButton;
-    private JButton backButton;
     private JPanel cardPanel;
-    private JList userList;
-    private JList messagesListChat;
-    private JList availableGroupsList;
-    private JRadioButton orderedRadioButton;
-    private JComboBox communicationTypeBox;
-    private JComboBox messageOrderingBox;
+    private JList<String> userList;
+    private JList<String> messagesListChat;
+    private JList<String> availableGroupsList;
+    private JComboBox<String> communicationTypeBox;
+    private JComboBox<String> messageOrderingBox;
 
     private CardLayout c1 = (CardLayout)cardPanel.getLayout();
 
     private String username;
 
-    JFrame frame;
+    private JFrame frame;
 
-    DebugWindow frameDebug;
-    DefaultListModel listModelMessages, listModelHeldMessages, listModelMessagesChat, listModelUser, listModelAvailableGroups;
+    private DebugWindow frameDebug;
+    private DefaultListModel<Message> listModelMessages;
+    private DefaultListModel<Message> listModelHeldMessages;
+    private DefaultListModel<String> listModelMessagesChat;
+    private DefaultListModel<String> listModelUser;
+    private DefaultListModel<String> listModelAvailableGroups;
 
     //ÄNDRA
-    User user;
-    Group group;
-    ReceiveWorker worker;
-    GroupManagement gm;
+    private User user;
+    private Group group;
+    private ReceiveWorker worker;
+    private GroupManagement gm;
 
-    public GUI() {
+    private GUI() {
         frame = this;
         setTitle("GCom");
         setSize(700, 600);
-        listModelMessages = new DefaultListModel<Message>();
-        listModelHeldMessages = new DefaultListModel<Message>();
-        listModelMessagesChat = new DefaultListModel();
-        listModelUser = new DefaultListModel();
-        listModelAvailableGroups = new DefaultListModel();
+        listModelMessages = new DefaultListModel<>();
+        listModelHeldMessages = new DefaultListModel<>();
+        listModelMessagesChat = new DefaultListModel<>();
+        listModelUser = new DefaultListModel<>();
+        listModelAvailableGroups = new DefaultListModel<>();
         userList.setBorder(BorderFactory.createTitledBorder("Users"));
         messagesListChat.setBorder(BorderFactory.createTitledBorder("Chat"));
         availableGroupsList.setBorder(BorderFactory.createTitledBorder("Available groups"));
@@ -80,7 +75,6 @@ public class GUI extends JFrame {
                 username = usernameField.getText();
                 userList.setModel(listModelUser);
                 availableGroupsList.setModel(listModelAvailableGroups);
-                //listModelUser.addElement(username);
                 c1.show(cardPanel, "Card2");
                 frame.setTitle("GCom - " + username);
                 frameDebug = new DebugWindow();
@@ -131,7 +125,7 @@ public class GUI extends JFrame {
                     System.out.println(u.getName());
                     listModelUser.addElement(u.getName());
                 }
-                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser, frameDebug, listModelHeldMessages);
+                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser, frameDebug);
                 worker.execute();            }
         });
         createGroupButton.addActionListener(new ActionListener() {
@@ -167,7 +161,7 @@ public class GUI extends JFrame {
                 {
                     listModelUser.addElement(u.getName());
                 }
-                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser, frameDebug, listModelHeldMessages);
+                worker = new ReceiveWorker(group, listModelMessagesChat, listModelUser, frameDebug);
                 worker.execute();
             }
         });
