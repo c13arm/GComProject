@@ -1,12 +1,6 @@
 package com.GroupManagement;
 
 import com.Communication.Communication;
-import com.Communication.Message;
-import com.Communication.MessageType;
-import com.Communication.NonReliable;
-import com.MessageOrdering.UnorderedOrdering;
-
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
@@ -22,19 +16,13 @@ import java.util.List;
  * When a group gets sent a message, the group name is resolved into a list of group members
  */
 public class GroupManagement {
-    NamingServiceRmi stub;
-
-   /* public static void main(String args[]) {
-        new GroupManagement("localhost", args[0]);
-    }*/
+    private NamingServiceRmi stub;
 
     public GroupManagement(String hostName) {
         try {
             Registry registry = LocateRegistry.getRegistry(hostName);
             stub = (NamingServiceRmi) registry.lookup("NamingService");
-        } catch (AccessException | NotBoundException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
+        } catch (NotBoundException | RemoteException e) {
             e.printStackTrace();
         }
     }
