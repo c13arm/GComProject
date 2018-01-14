@@ -5,6 +5,10 @@ import com.MessageOrdering.VectorClock;
 
 import java.io.Serializable;
 
+/**
+ *  The message class contains useful information such as the message itself,
+ *  vector clock, vector type as well as the message's sender.
+ */
 public class Message implements Serializable
 {
     private MessageType messageType;
@@ -12,6 +16,7 @@ public class Message implements Serializable
     private String mess;
     private VectorClock clock;
 
+    // Join, leave, election, election done -- messages
     public Message(MessageType messageType, User sender)
     {
         this.messageType = messageType;

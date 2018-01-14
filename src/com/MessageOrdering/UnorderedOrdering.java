@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * This class implements unordered ordering, which isn't more to it than just creating and sending the message
+ */
 public class UnorderedOrdering implements MessageOrdering, Serializable
 {
     BlockingQueue<Message> messageQueue;

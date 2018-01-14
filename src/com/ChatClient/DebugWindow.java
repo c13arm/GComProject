@@ -1,9 +1,10 @@
-package com.ChattClient;
+package com.ChatClient;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+/**
+ * This class opens up a new window which is used when debugging
+ */
 public class DebugWindow extends JFrame {
     private JPanel debugPanel;
     public JButton sendButton;

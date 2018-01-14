@@ -8,6 +8,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * This class contains what happens when the user sends a message of different types
+ */
 public class UserService extends UnicastRemoteObject implements UserServiceRmi {
     private Group group;
     private User user;
@@ -20,7 +23,6 @@ public class UserService extends UnicastRemoteObject implements UserServiceRmi {
 
     @Override
     public void sendMessage(Message message) throws RemoteException {
-        System.out.println("in sendMessage, from " + message.getSender().name + " type " + message.getMessageType().toString());
         if(message.getMessageType() == MessageType.JOIN) {
             User newUser = message.getSender();
             try {
@@ -29,7 +31,6 @@ public class UserService extends UnicastRemoteObject implements UserServiceRmi {
                 e.printStackTrace();
             }
             group.addMember(newUser);
-            System.out.println(group.members.size());
         } else if(message.getMessageType() == MessageType.LEAVE) {
             group.removeMember(message.getSender());
             if(group.leader.equals(message.getSender())) {
@@ -37,7 +38,6 @@ public class UserService extends UnicastRemoteObject implements UserServiceRmi {
             }
         } else if(message.getMessageType() == MessageType.ELECTION) {
             User sender = message.getSender();
-            System.out.println("Election " + sender.name + ":" + user.name);
             if(user.equals(sender)){
                 group.leader = user;
                 group.stub.registerGroup(group.id, user);

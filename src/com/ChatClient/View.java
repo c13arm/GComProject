@@ -1,4 +1,4 @@
-package com.ChattClient;
+package com.ChatClient;
 
 import com.Communication.Message;
 
@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * This class creates and contains GUI information
+ */
 public class View extends JFrame {
     private JPanel mainPanel;
     private JTextField usernameField;

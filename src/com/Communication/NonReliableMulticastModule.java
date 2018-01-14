@@ -8,13 +8,13 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NonReliable extends Communication implements Serializable {
+/**
+ * Class module for the implementation of Non-reliable multicasted messages
+ * (Non-reliable is currently working)
+ */
+public class NonReliableMulticastModule extends Communication implements Serializable {
 
-    public NonReliable() {
-        super();
-    }
-
-    public NonReliable(MessageOrdering messageOrdering)
+    public NonReliableMulticastModule(MessageOrdering messageOrdering)
     {
         super(messageOrdering);
     }
@@ -23,10 +23,6 @@ public class NonReliable extends Communication implements Serializable {
     public List<User> multicast(List<User> members, Message mess)
     {
         List<User> failed = new ArrayList<>();
-        if(orderingModule == null) {
-            System.out.println("orderingModule");
-        }
-        System.out.println("In multicast " + members.size());
         for (User member: members)
         {
             try {

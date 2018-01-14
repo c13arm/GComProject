@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The name server, consists of a hashmap which contains the leader and
+ * the leader's group
+ */
 public class NamingService extends UnicastRemoteObject implements NamingServiceRmi {
     //group name, leader
     HashMap<String,User> groupMap;

@@ -1,6 +1,5 @@
 package com.GroupManagement;
 
-import com.Communication.Communication;
 import com.Communication.Message;
 
 import java.io.Serializable;
@@ -10,36 +9,20 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
-import java.util.UUID;
 
+/**
+ * This class contains information about the user
+ */
 public class User implements Serializable {
     String name;
     String hostname;
     UserServiceRmi stub = null;
-
-    User() {
-        name = "";
-        hostname = "";
-    }
 
     public User(String name) throws UnknownHostException {
         if(name == null)
             throw new IllegalArgumentException();
         this.hostname = InetAddress.getLocalHost().getCanonicalHostName();
         this.name = name;
-    }
-
-    User(String name, String hostname, boolean remote) throws RemoteException, NotBoundException {
-        if(name == null || hostname == null)
-            throw new IllegalArgumentException();
-        this.hostname = hostname;
-        this.name = name;
-        if(remote) {
-            initStub();
-        }
-        //System.out.println(this.name + "  " + this.hostname);
     }
 
     void initStub() throws RemoteException, NotBoundException {

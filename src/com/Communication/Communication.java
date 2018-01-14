@@ -7,12 +7,12 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Abstract class consisting of the different necessaries for communication
+ */
 public abstract class Communication implements Serializable{
     MessageOrdering orderingModule;
 
-    Communication() {
-
-    }
     Communication(MessageOrdering orderingModule) {
         this.orderingModule = orderingModule;
     }

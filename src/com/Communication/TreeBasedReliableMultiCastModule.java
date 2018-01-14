@@ -5,8 +5,12 @@ import com.MessageOrdering.MessageOrdering;
 
 import java.util.List;
 
-public class TreeBased extends Communication {
-    public TreeBased(MessageOrdering orderingModule) {
+/**
+ * Class module for the implementation of Tree-based reliable multicasted messages
+ * (Tree-based reliable is currently not working)
+ */
+public class TreeBasedReliableMultiCastModule extends Communication {
+    public TreeBasedReliableMultiCastModule(MessageOrdering orderingModule) {
         super(orderingModule);
     }
 

@@ -9,6 +9,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
+/**
+ * This class implements causal ordering which uses the vector clock to make sure messages are sent
+ * in the correct order
+ */
 public class CausalOrdering implements MessageOrdering, Serializable
 {
     VectorClock clock;

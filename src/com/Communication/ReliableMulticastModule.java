@@ -5,8 +5,12 @@ import com.MessageOrdering.MessageOrdering;
 
 import java.util.List;
 
-public class Reliable extends Communication {
-    public Reliable(MessageOrdering orderingModule) {
+/**
+ * Class module for the implementation of reliable multicasted messages
+ * (Reliable is currently not working)
+ */
+public class ReliableMulticastModule extends Communication {
+    public ReliableMulticastModule(MessageOrdering orderingModule) {
         super(orderingModule);
     }
 

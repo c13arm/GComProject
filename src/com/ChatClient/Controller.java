@@ -1,4 +1,4 @@
-package com.ChattClient;
+package com.ChatClient;
 
 import com.Communication.*;
 import com.GroupManagement.User;
@@ -9,6 +9,9 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * This class's purpose is to update the GUI(view) with information from the model class
+ */
 public class Controller {
 
     private View theView;
@@ -70,11 +73,11 @@ public class Controller {
             }
 
             if(theView.communicationTypeBox.getSelectedItem().equals("Non reliable")) {
-                theModel.communicationModule = new NonReliable(theModel.order);
+                theModel.communicationModule = new NonReliableMulticastModule(theModel.order);
             } else if(theView.communicationTypeBox.getSelectedItem().equals("Basic reliable")) {
-                theModel.communicationModule = new Reliable(theModel.order);
+                theModel.communicationModule = new ReliableMulticastModule(theModel.order);
             } else if(theView.communicationTypeBox.getSelectedItem().equals("Three based reliable")){
-                theModel.communicationModule = new TreeBased(theModel.order);
+                theModel.communicationModule = new TreeBasedReliableMultiCastModule(theModel.order);
             }
             try {
                 theModel.group = theModel.gm.createGroup(theView.createGroupField.getText(), theModel.user, theModel.communicationModule);

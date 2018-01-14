@@ -8,8 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This class implements the vector clock which is used by causal ordering
+ * to make sure that the messages are being sent in the correct order
+ */
 public class VectorClock implements Serializable{
-    //List<Integer> clock;
     HashMap<String, Integer> clock;
     public VectorClock(int initalSize)
     {

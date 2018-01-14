@@ -1,9 +1,12 @@
-package com.ChattClient;
+package com.ChatClient;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Main method, used to start a new client
+ */
 public class Main {
     static View theView;
     static Controller theController;

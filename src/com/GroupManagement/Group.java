@@ -12,6 +12,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains information about the group, a group consists of users and each
+ * group has its own communication module
+ */
 public class Group implements Serializable {
     List<User> members;
     String id;

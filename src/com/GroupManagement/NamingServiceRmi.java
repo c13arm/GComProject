@@ -4,11 +4,14 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Interface for the name server's RMI
+ */
 public interface NamingServiceRmi extends Remote{
 
-    public User getLeader(String groupId) throws RemoteException;
-    public void registerGroup(String groupId, User leader) throws RemoteException;
-    public List<String> getGroups() throws RemoteException;
-    public void removeGroup(String groupId) throws RemoteException;
+    User getLeader(String groupId) throws RemoteException;
+    void registerGroup(String groupId, User leader) throws RemoteException;
+    List<String> getGroups() throws RemoteException;
+    void removeGroup(String groupId) throws RemoteException;
 
 }

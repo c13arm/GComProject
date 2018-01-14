@@ -1,4 +1,4 @@
-package com.ChattClient;
+package com.ChatClient;
 
 import com.Communication.Message;
 import com.Communication.MessageType;
@@ -7,6 +7,9 @@ import com.GroupManagement.Group;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * This class extends swingworker which is used to update the GUI on the EDT
+ */
 public class ReceiveWorker extends SwingWorker<Void, Message>
 {
     private Group group;
