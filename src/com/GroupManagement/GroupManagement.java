@@ -2,7 +2,6 @@ package com.GroupManagement;
 
 import com.Communication.Communication;
 import java.net.UnknownHostException;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -51,10 +50,8 @@ public class GroupManagement {
         User leader = stub.getLeader(groupName);
         try {
             leader.initStub();
-        } catch (NotBoundException e) {
+        } catch (NotBoundException | RemoteException e) {
             e.printStackTrace();
-        } catch (RemoteException r) {
-            r.printStackTrace();
         }
         Group group = leader.stub.getGroupRemote();
         for (User u: group.members) {
