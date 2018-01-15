@@ -4,7 +4,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 /**
- * Name server's main class, used to initiate the name server
+ * Name server's main class, used to start the name server
  */
 public class NameServer {
     public static void main(String args[]) {
@@ -14,7 +14,8 @@ public class NameServer {
 
             registry.rebind("NamingService", namingService);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Failed to start the name server");
+            System.exit(1);
         }
     }
 

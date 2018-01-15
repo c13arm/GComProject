@@ -33,7 +33,8 @@ public class UnorderedOrdering implements MessageOrdering, Serializable
             messageQueue.put(message);
         } catch (InterruptedException e)
         {
-            e.printStackTrace();
+            System.err.println("Failed when receiving message");
+            System.exit(1);
         }
 
     }

@@ -22,7 +22,8 @@ public class GroupManagement {
             Registry registry = LocateRegistry.getRegistry(hostName);
             stub = (NamingServiceRmi) registry.lookup("NamingService");
         } catch (NotBoundException | RemoteException e) {
-            e.printStackTrace();
+            System.err.println("Communication with name server failed");
+            System.exit(1);
         }
     }
 
@@ -38,7 +39,8 @@ public class GroupManagement {
 
             registry.rebind("UserService" + leader.getName() , userService);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Failed to register new group");
+            System.exit(1);
         }
         stub.registerGroup(groupName, leader);
         return group;
@@ -51,14 +53,16 @@ public class GroupManagement {
         try {
             leader.initStub();
         } catch (NotBoundException | RemoteException e) {
-            e.printStackTrace();
+            System.err.println("Failed to join group");
+            System.exit(1);
         }
         Group group = leader.stub.getGroupRemote();
         for (User u: group.members) {
             try {
                 u.initStub();
             } catch (NotBoundException e) {
-                e.printStackTrace();
+                System.err.println("Failed to join group");
+                System.exit(1);
             }
         }
         group.addMember(localUser);
@@ -67,7 +71,8 @@ public class GroupManagement {
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind("UserService" + localUser.getName() , userService);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Failed to join group");
+            System.exit(1);
         }
         group.memberJoined(localUser);
         return group;

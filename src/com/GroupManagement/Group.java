@@ -48,7 +48,6 @@ public class Group implements Serializable {
     public void multicast(Message message) {
         List<User> failed = communicationModule.multicast(members, message);
         for (User u : failed) {
-            System.out.println(u.name);
             removeMember(u);
         }
     }
@@ -99,7 +98,6 @@ public class Group implements Serializable {
             index++;
         }
         members.get(index).sendMessage(message);
-        System.out.println("In notyfyLeader" + id + "   " + leader.name);
     }
 
     void election(User user, User sender)
@@ -109,13 +107,11 @@ public class Group implements Serializable {
             return;
         }
         int index = members.indexOf(sender);
-        System.out.println("index;" + index );
         if(index == members.size() - 1) {
             index = 0;
         } else {
             index++;
         }
-        System.out.println("index;" + index );
         User next = members.get(index);
         User toSend;
         if(user.name.compareTo(sender.getName()) < 0) {
@@ -123,14 +119,14 @@ public class Group implements Serializable {
         } else {
             toSend = user;
         }
-        System.out.println("Electoin " + next.name + ":" + user.name + ":" + sender.name);
         Message message = new Message(MessageType.ELECTION, toSend);
         try
         {
             next.sendMessage(message);
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            System.err.println("Failed to send election message");
+            System.exit(1);
         }
     }
 

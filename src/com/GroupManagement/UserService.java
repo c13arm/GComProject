@@ -28,7 +28,8 @@ public class UserService extends UnicastRemoteObject implements UserServiceRmi {
             try {
                 newUser.initStub();
             } catch (NotBoundException e) {
-                e.printStackTrace();
+                System.err.println("Failed to send Join message");
+                System.exit(1);
             }
             group.addMember(newUser);
         } else if(message.getMessageType() == MessageType.LEAVE) {
