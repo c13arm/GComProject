@@ -1,2 +1,3 @@
 #!/bin/sh
-java -Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.codebase=file:. out/production/GCom/com/GroupManagement/GroupManagement $1
+cd out/production/GCom/
+java -Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.codebase=file:. com/ChatClient/Main
